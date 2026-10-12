@@ -1,3 +1,4 @@
+
 package com.sahaya.controllers;
 
 import com.sahaya.dto.CreateDonationRequest;
@@ -27,7 +28,6 @@ public class DonationController {
             @Valid @RequestBody CreateDonationRequest request,
             Authentication authentication
     ) {
-
         User donor = (User) authentication.getPrincipal();
 
         DonationResponse response =
@@ -40,7 +40,6 @@ public class DonationController {
 
     @GetMapping
     public ResponseEntity<List<DonationResponse>> getAvailableDonations() {
-
         return ResponseEntity.ok(
                 donationService.getAvailableDonations()
         );
@@ -50,11 +49,19 @@ public class DonationController {
     public ResponseEntity<List<DonationResponse>> getMyDonations(
             Authentication authentication
     ) {
-
         User donor = (User) authentication.getPrincipal();
 
         return ResponseEntity.ok(
                 donationService.getMyDonations(donor)
+        );
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<DonationResponse> getDonationById(
+            @PathVariable Long id
+    ) {
+        return ResponseEntity.ok(
+                donationService.getDonationById(id)
         );
     }
 }

@@ -3,7 +3,7 @@
 
 target/
 
-application.properties
+# Local configuration overrides
 application-local.properties
 
 node_modules/

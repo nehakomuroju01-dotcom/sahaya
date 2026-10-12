@@ -1,3 +1,4 @@
+
 package com.sahaya.dto;
 
 import com.sahaya.models.Mission;
@@ -8,7 +9,6 @@ import java.time.LocalDateTime;
 public class MissionResponse {
 
     private Long id;
-
     private Long donationId;
     private String donationTitle;
     private Integer donationQuantity;
@@ -26,7 +26,6 @@ public class MissionResponse {
     private LocalDateTime completedAt;
 
     public MissionResponse(Mission mission) {
-
         this.id = mission.getId();
 
         this.donationId = mission.getDonation().getId();
@@ -42,7 +41,6 @@ public class MissionResponse {
         }
 
         this.status = mission.getStatus();
-
         this.createdAt = mission.getCreatedAt();
         this.acceptedAt = mission.getAcceptedAt();
         this.completedAt = mission.getCompletedAt();

@@ -1,5 +1,6 @@
 package com.sahaya.controllers;
 
+import com.sahaya.dto.UserResponse;
 import com.sahaya.models.User;
 import com.sahaya.services.AdminService;
 import org.springframework.http.ResponseEntity;
@@ -19,30 +20,40 @@ public class AdminController {
     }
 
     @GetMapping("/pending-receivers")
-    public ResponseEntity<List<User>> getPendingReceivers(
+    public ResponseEntity<List<UserResponse>> getPendingReceivers(
             Authentication authentication
     ) {
-
         User admin = (User) authentication.getPrincipal();
 
-        return ResponseEntity.ok(
-                adminService.getPendingReceivers(admin)
-        );
+        List<UserResponse> response = adminService
+                .getPendingReceivers(admin)
+                .stream()
+                .map(this::toUserResponse)
+                .toList();
+
+        return ResponseEntity.ok(response);
     }
 
     @PutMapping("/verify-receiver/{receiverId}")
-    public ResponseEntity<User> verifyReceiver(
+    public ResponseEntity<UserResponse> verifyReceiver(
             @PathVariable Long receiverId,
             Authentication authentication
     ) {
-
         User admin = (User) authentication.getPrincipal();
 
-        return ResponseEntity.ok(
-                adminService.verifyReceiver(
-                        receiverId,
-                        admin
-                )
+        User verifiedUser = adminService.verifyReceiver(receiverId, admin);
+
+        return ResponseEntity.ok(toUserResponse(verifiedUser));
+    }
+
+    private UserResponse toUserResponse(User user) {
+        return new UserResponse(
+                user.getId(),
+                user.getName(),
+                user.getEmail(),
+                user.getRole(),
+                user.isVerified()
         );
     }
+
 }

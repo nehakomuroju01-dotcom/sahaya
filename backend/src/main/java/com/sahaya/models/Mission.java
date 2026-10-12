@@ -1,5 +1,5 @@
 package com.sahaya.models;
-
+import java.util.UUID;
 import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
@@ -7,6 +7,8 @@ import java.time.LocalDateTime;
 @Entity
 @Table(name = "missions")
 public class Mission {
+    @Column(unique = true)
+    private String handoverCode;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -92,5 +94,13 @@ public class Mission {
 
     public void setCompletedAt(LocalDateTime completedAt) {
         this.completedAt = completedAt;
+    }
+
+    public String getHandoverCode() {
+        return handoverCode;
+    }
+
+    public void setHandoverCode(String handoverCode) {
+        this.handoverCode = handoverCode;
     }
 }

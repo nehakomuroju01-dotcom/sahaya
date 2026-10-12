@@ -28,30 +28,35 @@ public class ClaimController {
             @Valid @RequestBody CreateClaimRequest request,
             Authentication authentication
     ) {
-
         User receiver = (User) authentication.getPrincipal();
 
-        ClaimResponse response =
-                claimService.createClaim(
-                        donationId,
-                        request,
-                        receiver
-                );
+        ClaimResponse response = claimService.createClaim(
+                donationId,
+                request,
+                receiver
+        );
 
-        return ResponseEntity
-                .status(HttpStatus.CREATED)
-                .body(response);
+        return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
     @GetMapping("/my")
     public ResponseEntity<List<ClaimResponse>> getMyClaims(
             Authentication authentication
     ) {
+        User receiver = (User) authentication.getPrincipal();
 
+        return ResponseEntity.ok(claimService.getMyClaims(receiver));
+    }
+
+    @PutMapping("/{claimId}/cancel")
+    public ResponseEntity<ClaimResponse> cancelClaim(
+            @PathVariable Long claimId,
+            Authentication authentication
+    ) {
         User receiver = (User) authentication.getPrincipal();
 
         return ResponseEntity.ok(
-                claimService.getMyClaims(receiver)
+                claimService.cancelClaim(claimId, receiver)
         );
     }
 }
