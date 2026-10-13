@@ -2,6 +2,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
+import api from "../services/api";
 
 export default function AuthPage() {
   const { login, register } = useAuth();
@@ -10,6 +11,7 @@ export default function AuthPage() {
   const [isLogin, setIsLogin] = useState(true);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const [resetStatus, setResetStatus] = useState("");
 
   const [form, setForm] = useState({
     email: "",
@@ -21,6 +23,23 @@ export default function AuthPage() {
 
   const handleChange = (e) => {
     setForm((prev) => ({ ...prev, [e.target.name]: e.target.value }));
+  };
+
+  const fillAccount = (email, password) => {
+    setForm((prev) => ({ ...prev, email, password }));
+    setError("");
+    setResetStatus("");
+  };
+
+  const handleResetDemoData = async () => {
+    try {
+      setResetStatus("Resetting demo data...");
+      await api.post("/demo/reset");
+      setResetStatus("✓ Demo data reset & seeded fresh!");
+      setTimeout(() => setResetStatus(""), 4000);
+    } catch {
+      setResetStatus("Failed to reset demo data.");
+    }
   };
 
   const handleSubmit = async (e) => {
@@ -165,6 +184,51 @@ export default function AuthPage() {
                 : "Create account →"}
           </button>
         </form>
+
+        {isLogin && (
+          <div style={{ marginTop: "1.5rem", padding: "1rem", background: "#f8fafc", borderRadius: "10px", border: "1px dashed #cbd5e1" }}>
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "0.6rem" }}>
+              <span style={{ fontSize: "0.75rem", fontWeight: "700", textTransform: "uppercase", letterSpacing: "0.05em", color: "#64748b" }}>
+                🎓 Presentation Demo Accounts
+              </span>
+              <button
+                type="button"
+                onClick={handleResetDemoData}
+                style={{ fontSize: "0.75rem", background: "none", border: "none", color: "#0f766e", cursor: "pointer", textDecoration: "underline", fontWeight: 600 }}
+              >
+                ↺ Reset Database
+              </button>
+            </div>
+            {resetStatus && (
+              <p style={{ fontSize: "0.8rem", color: resetStatus.startsWith("✓") ? "#16a34a" : "#dc2626", margin: "0 0 0.5rem 0", fontWeight: 500 }}>
+                {resetStatus}
+              </p>
+            )}
+            <div style={{ display: "flex", flexWrap: "wrap", gap: "6px" }}>
+              <button type="button" className="btn btn-secondary" style={{ fontSize: "0.75rem", padding: "4px 8px" }} onClick={() => fillAccount("taj.banquets@gmail.com", "password123")}>
+                🍱 Donor: Taj Banquets
+              </button>
+              <button type="button" className="btn btn-secondary" style={{ fontSize: "0.75rem", padding: "4px 8px" }} onClick={() => fillAccount("rohan.verma@gmail.com", "password123")}>
+                🧥 Donor: Rohan Verma
+              </button>
+              <button type="button" className="btn btn-secondary" style={{ fontSize: "0.75rem", padding: "4px 8px" }} onClick={() => fillAccount("aashray.shelter@gmail.com", "password123")}>
+                🏠 Receiver: Aashray Shelter
+              </button>
+              <button type="button" className="btn btn-secondary" style={{ fontSize: "0.75rem", padding: "4px 8px" }} onClick={() => fillAccount("karuna.rescue@gmail.com", "password123")}>
+                🐾 Receiver: Karuna Shelter
+              </button>
+              <button type="button" className="btn btn-secondary" style={{ fontSize: "0.75rem", padding: "4px 8px" }} onClick={() => fillAccount("aarav.volunteer@gmail.com", "password123")}>
+                🚴 Volunteer: Aarav
+              </button>
+              <button type="button" className="btn btn-secondary" style={{ fontSize: "0.75rem", padding: "4px 8px" }} onClick={() => fillAccount("sneha.volunteer@gmail.com", "password123")}>
+                📦 Volunteer: Sneha
+              </button>
+              <button type="button" className="btn btn-secondary" style={{ fontSize: "0.75rem", padding: "4px 8px" }} onClick={() => fillAccount("admin@sahaya.com", "admin12345678")}>
+                🛡️ Admin: Sahaya
+              </button>
+            </div>
+          </div>
+        )}
       </section>
     </main>
   );

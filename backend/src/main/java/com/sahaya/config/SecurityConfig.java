@@ -82,6 +82,7 @@ public class SecurityConfig {
                 .requestMatchers(HttpMethod.GET, "/api/impact/**").permitAll()
                 .requestMatchers(HttpMethod.GET, "/api/needs").permitAll()
                 .requestMatchers("/api/chat/**").permitAll()
+                .requestMatchers("/api/demo/**").permitAll()
                 .requestMatchers(HttpMethod.GET, "/api/donations/my")
                     .hasRole("DONOR")
                 .requestMatchers(HttpMethod.POST, "/api/donations")
